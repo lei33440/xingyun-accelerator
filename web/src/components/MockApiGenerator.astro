@@ -1,0 +1,123 @@
+---
+const countries = [
+  { code: 'CN', name: '中国' },
+  { code: 'US', name: '美国' },
+  { code: 'DE', name: '德国' },
+  { code: 'JP', name: '日本' },
+  { code: 'GB', name: '英国' },
+  { code: 'SG', name: '新加坡' },
+  { code: 'BR', name: '巴西' },
+  { code: 'AU', name: '澳大利亚' },
+  { code: 'IN', name: '印度' },
+];
+const protocols = [
+  { v: 'socks5', label: 'SOCKS5' },
+  { v: 'http', label: 'HTTP/HTTPS' },
+  { v: 'anytls', label: 'AnyTLS' },
+];
+---
+<div class="card p-5 sm:p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-neon-cyan/90">在线演示</p>
+      <h3 class="mt-1 text-lg font-semibold text-white">代理凭证生成器</h3>
+      <p class="mt-1 text-sm text-slate-400">选国家、选协议，立刻生成一个示例接入串。</p>
+    </div>
+    <span class="hidden sm:inline-flex chip">无需注册 · 不会真实访问</span>
+  </div>
+
+  <form id="mock-form" class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <label class="block">
+      <span class="mb-1 block text-xs text-slate-400">国家 / 地区</span>
+      <select id="mock-country" class="w-full rounded-lg border border-white/10 bg-ink-900/80 px-3 py-2 text-sm focus:border-neon-green focus:outline-none">
+        {countries.map((c) => (
+          <option value={c.code}>{c.name}</option>
+        ))}
+      </select>
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs text-slate-400">协议</span>
+      <select id="mock-protocol" class="w-full rounded-lg border border-white/10 bg-ink-900/80 px-3 py-2 text-sm focus:border-neon-green focus:outline-none">
+        {protocols.map((p) => (
+          <option value={p.v}>{p.label}</option>
+        ))}
+      </select>
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs text-slate-400">会话模式</span>
+      <select id="mock-session" class="w-full rounded-lg border border-white/10 bg-ink-900/80 px-3 py-2 text-sm focus:border-neon-green focus:outline-none">
+        <option value="rotating">每次请求轮换</option>
+        <option value="sticky-5">粘性 5 分钟</option>
+        <option value="sticky-30">粘性 30 分钟</option>
+      </select>
+    </label>
+  </form>
+
+  <div class="mt-5 rounded-lg border border-white/5 bg-ink-950/80 p-4 font-mono text-[13px] text-slate-200">
+    <div class="flex items-center gap-2 text-slate-500">
+      <span class="inline-block size-2 rounded-full bg-neon-green"></span>
+      <span id="mock-host">gw.xinyunproxy.example:8000</span>
+    </div>
+    <pre id="mock-output" class="mt-2 whitespace-pre-wrap break-all text-slate-100"></pre>
+    <div class="mt-3 flex flex-wrap gap-2 text-xs">
+      <button type="button" data-copy="curl" class="btn-ghost !py-1 !text-xs">复制 curl 命令</button>
+      <button type="button" data-copy="endpoint" class="btn-ghost !py-1 !text-xs">复制接入串</button>
+      <button type="button" data-copy="creds" class="btn-ghost !py-1 !text-xs">复制账号密码</button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const out = $('mock-output');
+    const country = $('mock-country');
+    const protocol = $('mock-protocol');
+    const session = $('mock-session');
+    const host = $('mock-host');
+
+    const rand = (n) =>
+      Array.from({ length: n }, () => Math.floor(Math.random() * 256)).join('.');
+
+    const render = () => {
+      const c = country.value;
+      const p = protocol.value;
+      const s = session.value;
+      const ip = rand(4);
+      const port = ['socks5', 'anytls'].includes(p) ? '1080' : '8000';
+      const user = `user_${c.toLowerCase()}`;
+      const pass = Math.random().toString(36).slice(2, 10);
+      const sessionPart = s === 'rotating' ? '' : `-session=${s.split('-')[1]}m`;
+      const protoLabel = { socks5: 'socks5h', http: 'http', anytls: 'socks5' }[p];
+
+      host.textContent = `gw.xinyunproxy.example:${port}  (${c}, ${p}, ${s})`;
+
+      const endpoint = `${protoLabel}://${user}:${pass}${sessionPart}@gw.xinyunproxy.example:${port}`;
+      const curl = `curl -x ${endpoint} https://httpbin.org/ip  # 返回 IP: ${ip}`;
+
+      out.textContent = `# 接入串\n${endpoint}\n\n# 目标网站将看到的 IP\n${ip}:${port}\n\n# 账号信息\n${user} / ${pass}\n\n# 立即试试\n${curl}`;
+
+      out.dataset.endpoint = endpoint;
+      out.dataset.curl = curl;
+      out.dataset.creds = `${user}:${pass}`;
+    };
+
+    [country, protocol, session].forEach((el) => el.addEventListener('change', render));
+    render();
+
+    document.querySelectorAll('[data-copy]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const key = btn.getAttribute('data-copy');
+        const text = out.dataset[key] || '';
+        try {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = '已复制 ✓';
+          setTimeout(() => (btn.textContent = orig), 1200);
+        } catch {
+          btn.textContent = '复制失败';
+        }
+      });
+    });
+  })();
+</script>

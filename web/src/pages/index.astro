@@ -1,0 +1,117 @@
+---
+import Base from '@layouts/Base.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import PersonaTabs from '@components/PersonaTabs.astro';
+import SpeedTest from '@components/SpeedTest.astro';
+import StreamingList from '@components/StreamingList.astro';
+import ClientDownloadSection from '@components/ClientDownloadSection.astro';
+import GlobeVisual from '@components/GlobeVisual.astro';
+import FloatingContactCTA from '@components/FloatingContactCTA.astro';
+import { getGlobalSettings } from '@lib/cms';
+
+const settings = await getGlobalSettings();
+// Strapi may store the literal two-char "\n" rather than a real newline; handle both.
+const headline = (settings.heroHeadline || '').split(/\\n|\n/).map((s) => s.trim()).filter(Boolean);
+const trialDays = settings.defaultTrialDays || 3;
+---
+<Base settings={settings} description={settings.defaultSeoDescription}>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-grid pointer-events-none"></div>
+    <div class="container-x relative pt-14 pb-16 sm:pt-20 sm:pb-24">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+          {settings.heroEyebrow && (
+            <p class="inline-flex items-center gap-2 chip">
+              <span class="inline-block size-1.5 rounded-full bg-neon-green animate-pulseDot"></span>
+              {settings.heroEyebrow}
+            </p>
+          )}
+          <h1 class="mt-4 text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-semibold tracking-tight text-white">
+            {headline.map((line, i) => (
+              <span class={i > 0 ? 'block' : ''}>
+                {i === headline.length - 1 ? <span class="text-neon-green">{line}</span> : line}
+              </span>
+            ))}
+          </h1>
+          {settings.heroLede && (
+            <p class="lede mt-5 max-w-2xl">{settings.heroLede}</p>
+          )}
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a class="btn-primary" href="/download">
+              <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+              </svg>
+              免费下载客户端
+            </a>
+            <a class="btn-ghost" href={settings.telegramLink || '#'} target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" class="size-4" fill="currentColor">
+                <path d="M22 3L2 11l6 2 2 6 4-4 6 4 2-16z" />
+              </svg>
+              领取 {trialDays} 天试用
+            </a>
+          </div>
+          <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400">
+            <li>· 无需信用卡</li>
+            <li>· 1 元体验 {trialDays} 天</li>
+            <li>· 7×24 工程师客服</li>
+            <li>· 随时退订</li>
+          </ul>
+        </div>
+        <div>
+          <GlobeVisual />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-x pb-12 sm:pb-16">
+    <PersonaTabs />
+  </section>
+
+  {(settings.showStreamingList !== false || settings.showSpeedTest !== false) && (
+    <section class="container-x pb-12 sm:pb-16">
+      <SectionHeader
+        eyebrow="能力"
+        title="不只是「翻过去」，还要快、稳、可解锁。"
+        lede="真实节点、真实速率、真实流媒体解锁能力。"
+      />
+      <div class="mt-8 grid gap-6 lg:grid-cols-2">
+        {settings.showSpeedTest !== false && <SpeedTest />}
+        {settings.showStreamingList !== false && <StreamingList />}
+      </div>
+    </section>
+  )}
+
+  {settings.showClientDownload !== false && (
+    <section class="container-x pb-12 sm:pb-16">
+      <SectionHeader
+        eyebrow="下载"
+        title="全平台客户端，一键安装。"
+        lede="Windows / macOS / iOS / Android / Linux 全覆盖，移动端扫码即用。"
+      />
+      <div class="mt-8">
+        <ClientDownloadSection />
+      </div>
+    </section>
+  )}
+
+  <section class="container-x py-12 sm:py-16">
+    <div class="card relative overflow-hidden p-8 sm:p-10 text-center">
+      <div class="absolute inset-0 bg-grid-fade opacity-60"></div>
+      <div class="relative">
+        <h2 class="h-section">还在等什么？{trialDays} 天免费体验，1 元即开</h2>
+        <p class="lede mt-3 max-w-2xl mx-auto">
+          不限速、不限流量，5 分钟内完成接入。断线、卡顿、不解锁，30 天内全额退款。
+        </p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a class="btn-primary" href="/download">立即下载</a>
+          <a class="btn-ghost" href={settings.telegramLink || '#'} target="_blank" rel="noopener">Telegram 咨询</a>
+          {settings.wechatId && <span class="chip">微信：{settings.wechatId}</span>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FloatingContactCTA />
+</Base>

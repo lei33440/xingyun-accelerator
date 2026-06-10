@@ -1,0 +1,85 @@
+---
+const nodes = [
+  { x: 18, y: 38, label: '美西' },
+  { x: 26, y: 42, label: '美东' },
+  { x: 49, y: 32, label: '中欧' },
+  { x: 55, y: 36, label: '西欧' },
+  { x: 72, y: 44, label: '南亚' },
+  { x: 80, y: 38, label: '日本' },
+  { x: 85, y: 50, label: '新加坡' },
+  { x: 64, y: 56, label: '南非' },
+  { x: 32, y: 60, label: '巴西' },
+  { x: 22, y: 50, label: '墨西哥' },
+  { x: 60, y: 30, label: '俄罗斯' },
+  { x: 90, y: 60, label: '澳大利亚' },
+];
+const stats = [
+  { label: '在线节点', value: '190+' },
+  { label: '覆盖国家', value: '195' },
+  { label: '平均延迟', value: '38ms' },
+  { label: '30天在线率', value: '99.97%' },
+];
+---
+<div class="card relative overflow-hidden p-5 sm:p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-neon-green/90">实时网络</p>
+      <h3 class="mt-1 text-lg font-semibold text-white">全球节点连通率</h3>
+    </div>
+    <div class="flex items-center gap-2 text-xs text-slate-400">
+      <span class="inline-block size-2 rounded-full bg-neon-green animate-pulseDot"></span>
+      实时刷新
+    </div>
+  </div>
+
+  <div class="relative mt-4 aspect-[2/1] w-full">
+    <svg viewBox="0 0 100 50" class="absolute inset-0 size-full text-white/10" aria-hidden="true">
+      <defs>
+        <pattern id="dots" x="0" y="0" width="2" height="2" patternUnits="userSpaceOnUse">
+          <circle cx="0.3" cy="0.3" r="0.3" fill="currentColor" />
+        </pattern>
+        <linearGradient id="scan" x1="0" x2="1">
+          <stop offset="0%" stop-color="rgba(34,245,158,0)" />
+          <stop offset="50%" stop-color="rgba(34,245,158,0.35)" />
+          <stop offset="100%" stop-color="rgba(34,245,158,0)" />
+        </linearGradient>
+        <mask id="scan-mask">
+          <rect class="scan-bar" x="0" y="0" width="20" height="50" fill="url(#scan)" />
+        </mask>
+      </defs>
+      <rect x="0" y="0" width="100" height="50" fill="url(#dots)" />
+      <rect x="0" y="0" width="100" height="50" fill="url(#dots)" mask="url(#scan-mask)" />
+    </svg>
+
+    <svg viewBox="0 0 100 50" class="absolute inset-0 size-full" aria-hidden="true">
+      {nodes.map((n) => (
+        <g>
+          <circle cx={n.x} cy={n.y} r="0.9" fill="#22f59e" />
+          <circle cx={n.x} cy={n.y} r="0.9" fill="#22f59e" class="origin-center">
+            <animate attributeName="r" values="0.9;2.2;0.9" dur="2.4s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="1;0.2;1" dur="2.4s" repeatCount="indefinite" />
+          </circle>
+        </g>
+      ))}
+    </svg>
+  </div>
+
+  <dl class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    {stats.map((s) => (
+      <div class="rounded-lg border border-white/5 bg-ink-900/50 p-3">
+        <dt class="text-[10px] uppercase tracking-wider text-slate-500">{s.label}</dt>
+        <dd class="mt-0.5 font-mono text-lg text-white">{s.value}</dd>
+      </div>
+    ))}
+  </dl>
+</div>
+
+<style>
+  .scan-bar {
+    animation: scan 4.5s linear infinite;
+  }
+  @keyframes scan {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100px); }
+  }
+</style>

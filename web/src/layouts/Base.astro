@@ -1,0 +1,130 @@
+---
+import { getGlobalSettings } from '@lib/cms';
+import DevBanner from '@components/DevBanner.astro';
+import '../styles/global.css';
+
+const settings = await getGlobalSettings();
+const siteName = settings.siteName || 'NovaProxy';
+const tagline = settings.siteTagline || '';
+
+const nav = [
+  { href: '/', label: '首页' },
+  { href: '/download', label: '下载' },
+  { href: '/pricing', label: '价格' },
+  { href: '/blog', label: '博客' },
+];
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  settings?: any;
+}
+
+const {
+  title,
+  description = settings.defaultSeoDescription || tagline,
+  ogImage,
+  settings: _ignored,
+} = Astro.props as Props;
+
+const fullTitle = title ? `${title} · ${siteName}` : `${siteName} — ${tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
+---
+<!doctype html>
+<html lang="zh-CN" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#05070d" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    {
+      settings.noticeEnabled && settings.noticeBanner && (
+        <div class="w-full border-b border-white/5 bg-ink-900/70 text-center text-xs sm:text-sm text-slate-300">
+          <div class="container-x flex items-center justify-center gap-2.5 py-3">
+            <span class="inline-block size-1.5 rounded-full bg-neon-green animate-pulseDot" />
+            <span>{settings.noticeBanner}</span>
+          </div>
+        </div>
+      )
+    }
+
+    <header class="sticky top-0 z-40 border-b border-white/5 bg-ink-950/70 backdrop-blur">
+      <div class="container-x flex h-14 items-center justify-between">
+        <a href="/" class="flex items-center gap-2 group">
+          <span class="inline-flex size-7 items-center justify-center rounded-md bg-neon-green/15 text-neon-green">
+            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2 L20 7 V17 L12 22 L4 17 V7 Z" />
+              <path d="M12 12 L20 7" />
+              <path d="M12 12 L4 7" />
+              <path d="M12 12 V22" />
+            </svg>
+          </span>
+          <span class="font-semibold tracking-tight text-white">{siteName}</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          {nav.map((n) => (
+            <a
+              href={n.href}
+              class:list={[
+                'px-3 py-1.5 text-sm rounded-md text-slate-300 hover:text-white hover:bg-white/5',
+                Astro.url.pathname === n.href && 'text-white bg-white/5',
+              ]}
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <div class="flex items-center gap-2">
+          <a href="/download" class="btn-ghost hidden sm:inline-flex">下载</a>
+          <a
+            href={settings.telegramLink || '#contact'}
+            target="_blank"
+            rel="noopener"
+            class="btn-primary"
+          >
+            免费试用
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <DevBanner />
+
+    <footer class="border-t border-white/5 mt-16">
+      <div class="container-x py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-400">
+        <p>{settings.footerCopy || `© ${new Date().getFullYear()} ${siteName}.`}</p>
+        <div class="flex items-center gap-4">
+          {settings.telegramLink && (
+            <a class="hover:text-white" href={settings.telegramLink} target="_blank" rel="noopener">Telegram</a>
+          )}
+          {settings.discordInvite && (
+            <a class="hover:text-white" href={settings.discordInvite} target="_blank" rel="noopener">Discord</a>
+          )}
+          {settings.supportEmail && (
+            <a class="hover:text-white" href={`mailto:${settings.supportEmail}`}>邮件</a>
+          )}
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

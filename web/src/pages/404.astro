@@ -1,0 +1,13 @@
+---
+import Base from '@layouts/Base.astro';
+import { getGlobalSettings } from '@lib/cms';
+const settings = await getGlobalSettings();
+---
+<Base settings={settings} title="页面未找到">
+  <section class="container-x py-24 text-center">
+    <p class="font-mono text-7xl text-neon-green">404</p>
+    <h1 class="mt-4 text-3xl font-semibold text-white">这个节点不存在。</h1>
+    <p class="lede mt-3">页面可能已迁移或从未存在。</p>
+    <a class="btn-primary mt-6" href="/">返回首页</a>
+  </section>
+</Base>

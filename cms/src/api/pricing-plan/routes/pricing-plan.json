@@ -1,0 +1,34 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/pricing-plans",
+      "handler": "pricing-plan.find",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "GET",
+      "path": "/pricing-plans/:id",
+      "handler": "pricing-plan.findOne",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "POST",
+      "path": "/pricing-plans",
+      "handler": "pricing-plan.create",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "PUT",
+      "path": "/pricing-plans/:id",
+      "handler": "pricing-plan.update",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "DELETE",
+      "path": "/pricing-plans/:id",
+      "handler": "pricing-plan.delete",
+      "config": { "policies": [], "auth": false }
+    }
+  ]
+}

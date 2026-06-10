@@ -1,0 +1,65 @@
+---
+const regions = [
+  { code: 'HK', ping: 12, label: '香港' },
+  { code: 'JP', ping: 56, label: '东京' },
+  { code: 'US', ping: 138, label: '洛杉矶' },
+  { code: 'DE', ping: 168, label: '法兰克福' },
+  { code: 'SG', ping: 48, label: '新加坡' },
+  { code: 'GB', ping: 175, label: '伦敦' },
+];
+const stats = [
+  { value: '90+', label: '国家节点' },
+  { value: '<40ms', label: '亚洲延迟' },
+  { value: '99.97%', label: '可用率' },
+  { value: '7×24', label: '工程师' },
+];
+---
+<div class="relative h-full min-h-[420px] flex items-center justify-center">
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <div class="relative size-[440px] max-w-full">
+      <div class="absolute inset-0 rounded-full border border-white/5"></div>
+      <div class="absolute inset-6 rounded-full border border-white/5"></div>
+      <div class="absolute inset-14 rounded-full border border-neon-green/15"></div>
+      <div class="absolute inset-24 rounded-full border border-neon-cyan/10"></div>
+      <div class="absolute inset-0 rounded-full border border-dashed border-neon-green/20 animate-[spin_60s_linear_infinite]"></div>
+    </div>
+  </div>
+
+  <div class="relative z-10 flex flex-col items-center">
+    <div class="relative flex items-center justify-center size-32 sm:size-40 rounded-full bg-gradient-to-br from-neon-green/20 to-neon-cyan/10 ring-1 ring-neon-green/30 shadow-glow">
+      <span class="absolute inset-0 rounded-full bg-neon-green/10 animate-ping"></span>
+      <svg viewBox="0 0 24 24" class="size-12 sm:size-16 text-neon-green" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20" />
+      </svg>
+    </div>
+    <p class="mt-4 text-sm font-medium text-white">全球骨干网络</p>
+    <p class="text-xs text-slate-400">已为 12,800+ 用户加速</p>
+  </div>
+
+  {regions.map((r, i) => {
+    const angle = (i / regions.length) * Math.PI * 2 - Math.PI / 2;
+    const radius = 180;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+    return (
+      <div
+        class="absolute z-20 flex items-center gap-1.5 rounded-full border border-white/10 bg-ink-900/80 px-2.5 py-1 text-[11px] backdrop-blur"
+        style={`left: calc(50% + ${x}px); top: calc(50% + ${y}px); transform: translate(-50%, -50%);`}
+      >
+        <span class="size-1.5 rounded-full bg-neon-green animate-pulseDot"></span>
+        <span class="font-mono text-neon-green">{r.ping}ms</span>
+        <span class="text-slate-300">{r.label}</span>
+      </div>
+    );
+  })}
+</div>
+
+<div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+  {stats.map((s) => (
+    <div class="card p-3 text-center">
+      <p class="font-mono text-xl sm:text-2xl text-white">{s.value}</p>
+      <p class="mt-0.5 text-[10px] uppercase tracking-wider text-slate-500">{s.label}</p>
+    </div>
+  ))}
+</div>

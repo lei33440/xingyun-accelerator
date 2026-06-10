@@ -1,0 +1,34 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/client-downloads",
+      "handler": "client-download.find",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "GET",
+      "path": "/client-downloads/:id",
+      "handler": "client-download.findOne",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "POST",
+      "path": "/client-downloads",
+      "handler": "client-download.create",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "PUT",
+      "path": "/client-downloads/:id",
+      "handler": "client-download.update",
+      "config": { "policies": [], "auth": false }
+    },
+    {
+      "method": "DELETE",
+      "path": "/client-downloads/:id",
+      "handler": "client-download.delete",
+      "config": { "policies": [], "auth": false }
+    }
+  ]
+}

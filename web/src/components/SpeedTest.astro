@@ -1,0 +1,40 @@
+---
+const nodes = [
+  { name: '美国 · 洛杉矶', flag: '🇺🇸', ping: 138, mbps: 312 },
+  { name: '日本 · 东京', flag: '🇯🇵', ping: 56, mbps: 480 },
+  { name: '新加坡', flag: '🇸🇬', ping: 48, mbps: 510 },
+  { name: '德国 · 法兰克福', flag: '🇩🇪', ping: 168, mbps: 290 },
+  { name: '英国 · 伦敦', flag: '🇬🇧', ping: 175, mbps: 280 },
+  { name: '香港', flag: '🇭🇰', ping: 12, mbps: 850 },
+  { name: '台湾 · 台北', flag: '🇨🇳', ping: 18, mbps: 720 },
+  { name: '韩国 · 首尔', flag: '🇰🇷', ping: 42, mbps: 540 },
+];
+---
+<div class="card p-5 sm:p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-neon-cyan/90">实时测速</p>
+      <h3 class="mt-1 text-lg font-semibold text-white">节点延迟与带宽</h3>
+    </div>
+    <span class="chip !text-[10px]">每 30 秒刷新</span>
+  </div>
+
+  <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+    {nodes.map((n) => (
+      <li class="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-ink-900/50 px-3 py-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="text-base">{n.flag}</span>
+          <span class="text-sm text-slate-200 truncate">{n.name}</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-mono shrink-0">
+          <span class="text-neon-green">{n.mbps} Mbps</span>
+          <span class="text-slate-400">{n.ping}ms</span>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <p class="mt-4 text-xs text-slate-500">
+    * 数据为示例值，实际速度取决于您的本地网络与所选节点。
+  </p>
+</div>

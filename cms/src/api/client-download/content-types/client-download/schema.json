@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "client_downloads",
+  "info": {
+    "singularName": "client-download",
+    "pluralName": "client-downloads",
+    "displayName": "Client Download",
+    "description": "Per-platform download links (iOS / Android / macOS / Windows / Linux) and the QR code for mobile."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "platform": {
+      "type": "enumeration",
+      "enum": ["iOS", "Android", "macOS", "Windows", "Linux", "Router", "Apple TV"],
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "maxLength": 80
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "fileSize": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "downloadUrl": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "storeUrl": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "qrImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "instructions": {
+      "type": "text"
+    },
+    "highlight": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

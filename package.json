@@ -1,0 +1,22 @@
+{
+  "name": "proxy-ip-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Proxy IP public site (Astro) + hidden CMS (Strapi) monorepo",
+  "workspaces": [
+    "cms"
+  ],
+  "scripts": {
+    "cms:dev": "npm run develop --workspace cms",
+    "cms:start": "npm run start --workspace cms",
+    "cms:seed": "npm run seed --workspace cms",
+    "web:dev": "npm --prefix web run dev",
+    "web:build": "npm --prefix web run build",
+    "web:preview": "npm --prefix web run preview",
+    "web:sync": "node scripts/sync-cms.mjs",
+    "web:revalidate": "node scripts/revalidate.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=20.x.x"
+  }
+}

@@ -1,0 +1,49 @@
+---
+const { blocks = [] } = Astro.props;
+
+function renderInline(children = []) {
+  return children.map((c) => {
+    const text = c.text ?? '';
+    if (c.bold && c.italic) return `<strong><em>${text}</em></strong>`;
+    if (c.bold) return `<strong>${text}</strong>`;
+    if (c.italic) return `<em>${text}</em>`;
+    if (c.code) return `<code>${text}</code>`;
+    if (c.type === 'link') {
+      const url = c.url || '#';
+      return `<a href="${url}" rel="noopener" target="_blank">${text}</a>`;
+    }
+    return text;
+  }).join('');
+}
+---
+<div class="prose-doc">
+  {blocks.map((b) => {
+    if (b.type === 'paragraph') {
+      return <p set:html={renderInline(b.children)} />;
+    }
+    if (b.type === 'heading') {
+      const level = Math.min(Math.max(b.level || 2, 2), 4);
+      const Tag = `h${level}`;
+      return <Tag set:html={renderInline(b.children)} />;
+    }
+    if (b.type === 'list') {
+      const Tag = b.format === 'ordered' ? 'ol' : 'ul';
+      return (
+        <Tag>
+          {(b.children || []).map((li) => (
+            <li set:html={renderInline(li.children)} />
+          ))}
+        </Tag>
+      );
+    }
+    if (b.type === 'code') {
+      return (
+        <pre><code>{b.children?.map((c) => c.text || '').join('') || ''}</code></pre>
+      );
+    }
+    if (b.type === 'quote') {
+      return <blockquote set:html={renderInline(b.children)} />;
+    }
+    return null;
+  })}
+</div>

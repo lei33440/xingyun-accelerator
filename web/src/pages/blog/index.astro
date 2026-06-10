@@ -1,0 +1,53 @@
+---
+import Base from '@layouts/Base.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import FloatingContactCTA from '@components/FloatingContactCTA.astro';
+import { getAllArticles, getGlobalSettings } from '@lib/cms';
+import { formatDate } from '@lib/format';
+
+const [settings, articles] = await Promise.all([getGlobalSettings(), getAllArticles()]);
+---
+<Base settings={settings} title="Blog" description="Engineering writeups, proxy fundamentals, and field reports.">
+  <section class="container-x pt-14 pb-8">
+    <SectionHeader
+      eyebrow="Blog"
+      title="Field notes from the proxy trenches."
+      lede="Deep dives, postmortems, and the kind of tips that used to live only in Discord."
+    />
+  </section>
+
+  <section class="container-x py-8">
+    {settings.showBlogModule === false ? (
+      <div class="card p-8 text-center text-slate-400">The blog is currently disabled in CMS.</div>
+    ) : articles.length === 0 ? (
+      <div class="card p-8 text-center text-slate-400">No posts yet — log in to the CMS to publish the first one.</div>
+    ) : (
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {articles.map((a) => (
+          <a href={`/blog/${a.slug}`} class="card p-5 group hover:border-neon-green/40 transition">
+            {a.coverImage?.url && (
+              <img
+                src={a.coverImage.url}
+                alt={a.title}
+                class="mb-4 aspect-[16/9] w-full rounded-lg object-cover"
+                loading="lazy"
+              />
+            )}
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span>{formatDate(a.publishedAt || a.createdAt)}</span>
+              <span>·</span>
+              <span>{a.readingMinutes || 5} min read</span>
+              {a.category && <span class="chip ml-auto !text-[10px]">{a.category}</span>}
+            </div>
+            <h3 class="mt-2 text-lg font-semibold text-white group-hover:text-neon-green transition">
+              {a.title}
+            </h3>
+            {a.excerpt && <p class="mt-2 text-sm text-slate-400 line-clamp-3">{a.excerpt}</p>}
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <FloatingContactCTA />
+</Base>

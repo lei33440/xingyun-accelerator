@@ -1,0 +1,168 @@
+---
+import Base from '@layouts/Base.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import FloatingContactCTA from '@components/FloatingContactCTA.astro';
+import { getAllPricingPlans, getGlobalSettings } from '@lib/cms';
+
+const [settings, plans] = await Promise.all([getGlobalSettings(), getAllPricingPlans()]);
+const trialDays = settings.defaultTrialDays || 3;
+
+const faqs = [
+  { q: '真的不限流量吗？', a: '是的。轻量版、标准版、年付专业版均为无限流量；团队版每月 5TB 流量池，超出后不限速。' },
+  { q: '设备数怎么算？', a: '同一账号同时在线的设备数。轻量版 3 台、标准版/年付 5 台、团队版 30 台。设备离线后名额立即释放。' },
+  { q: '可以试用吗？', a: '可以。订阅任意套餐后 30 天内不满意可全额退款；轻量版/标准版另有 ' + trialDays + ' 天免费试用，无需信用卡。' },
+  { q: '流媒体解锁稳定吗？', a: '我们使用独立 IP 池 + 专线节点，Netflix / Disney+ / HBO 等多区内容可正常播放；如遇解锁异常可在 Telegram 申请更换节点。' },
+  { q: '企业版能开发票吗？', a: '可以。团队版及以上支持签订合规服务协议、开具增值税普通发票 / 专用发票。' },
+  { q: '什么是 AnyTLS 协议？', a: 'AnyTLS 是我们自研的高匿协议，基于 TLS 1.3 包装流量，特征上接近普通 HTTPS 访问，更难被识别和干扰。' },
+];
+---
+<Base settings={settings} title="价格" description="包月、包年、团队订阅。1 元体验 3 天。">
+  <section class="container-x pt-14 pb-8">
+    <SectionHeader
+      eyebrow="价格"
+      title="按你需要的时长和设备数选。"
+      lede="所有套餐随时升级/降级/退订。"
+    />
+  </section>
+
+  <!-- PLANS -->
+  {settings.showPricingModule !== false && (
+    <section class="container-x">
+      {plans.length === 0 ? (
+        <div class="card p-6 text-center text-slate-400">暂未配置套餐，请登录 CMS 后台创建。</div>
+      ) : (
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {plans.map((plan) => {
+            const isYearly = plan.billingPeriod === 'Yearly';
+            const isQuarterly = plan.billingPeriod === 'Quarterly';
+            const periodLabel = {
+              Monthly: '/月',
+              Quarterly: '/季',
+              Yearly: '/年',
+              Lifetime: '终身',
+            }[plan.billingPeriod] || '/月';
+            return (
+              <div class:list={[
+                'card p-6 flex flex-col relative',
+                plan.highlight && 'ring-1 ring-neon-green/50',
+              ]}>
+                {plan.badge && (
+                  <span class:list={[
+                    'absolute -top-3 left-1/2 -translate-x-1/2 chip whitespace-nowrap',
+                    plan.highlight ? '!bg-neon-green !text-ink-950 !border-neon-green font-semibold' : '!bg-neon-green/15 !text-neon-green !border-neon-green/30',
+                  ]}>
+                    {plan.badge}
+                  </span>
+                )}
+                <p class="text-sm font-medium text-white">{plan.name}</p>
+                <p class="mt-1 text-xs text-slate-400 min-h-[2.5em]">{plan.subtitle}</p>
+
+                <p class="mt-4 flex items-baseline gap-1">
+                  {plan.originalPrice && (
+                    <span class="text-sm text-slate-500 line-through mr-1">¥{Number(plan.originalPrice).toFixed(0)}</span>
+                  )}
+                  <span class="font-mono text-4xl text-white">¥{Number(plan.price).toFixed(0)}</span>
+                  <span class="text-sm text-slate-400">{periodLabel}</span>
+                </p>
+                {isYearly && plan.originalPrice && (
+                  <p class="text-[11px] text-neon-green mt-1">
+                    平均 ¥{(Number(plan.price) / 12).toFixed(0)}/月
+                  </p>
+                )}
+
+                <ul class="mt-5 space-y-2 text-sm text-slate-200/90 flex-1">
+                  {(plan.features || []).map((feat) => (
+                    <li class="flex items-start gap-2">
+                      <svg viewBox="0 0 24 24" class="mt-0.5 size-4 shrink-0 text-neon-green" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M5 12l4 4 10-10" />
+                      </svg>
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div class="mt-5 space-y-1 text-[11px] text-slate-500 border-t border-white/5 pt-3">
+                  <p>📱 {plan.deviceLimit} 台设备 · {plan.trafficAllowance}</p>
+                  {plan.nodeCountries && <p>🌍 {plan.nodeCountries}</p>}
+                  {plan.protocols && <p>🔐 {plan.protocols}</p>}
+                </div>
+
+                <a
+                  href={plan.ctaLink || settings.telegramLink || '#'}
+                  target="_blank"
+                  rel="noopener"
+                  class:list={['mt-5', plan.highlight ? 'btn-primary' : 'btn-ghost']}
+                >
+                  {plan.trialDays ? `免费试用 ${plan.trialDays} 天` : (plan.ctaLabel || '立即订阅')}
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <p class="mt-6 text-center text-xs text-slate-500">
+        所有套餐都包含 7×24 工程师客服、断线 30 分钟内响应、30 天内不满意全额退款。
+      </p>
+    </section>
+  )}
+
+  <!-- COMPARISON -->
+  <section class="container-x py-12 sm:py-16">
+    <SectionHeader
+      eyebrow="横向对比"
+      title="按需选择，按月付费更灵活。"
+    />
+    <div class="mt-8 card overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-white/5">
+            <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-slate-500 font-medium">套餐</th>
+            <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-slate-500 font-medium">价格</th>
+            <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-slate-500 font-medium">设备数</th>
+            <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-slate-500 font-medium">节点</th>
+            <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-slate-500 font-medium">流媒体</th>
+            <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-slate-500 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {plans.map((p) => (
+            <tr class="border-b border-white/5 last:border-0 hover:bg-white/[0.02]">
+              <td class="py-3 px-4 text-white">{p.name}</td>
+              <td class="py-3 px-4 text-slate-300">¥{Number(p.price).toFixed(0)}/{p.billingPeriod === 'Yearly' ? '年' : p.billingPeriod === 'Monthly' ? '月' : p.billingPeriod === 'Quarterly' ? '季' : '终身'}</td>
+              <td class="py-3 px-4 text-slate-300">{p.deviceLimit} 台</td>
+              <td class="py-3 px-4 text-slate-300 max-w-[16ch] truncate" title={p.nodeCountries}>{p.nodeCountries || '—'}</td>
+              <td class="py-3 px-4 text-slate-300">{(p.streamingUnlocked || []).length > 0 ? `${(p.streamingUnlocked || []).length}+ 平台` : '基础'}</td>
+              <td class="py-3 px-4 text-right">
+                <a href={p.ctaLink || '#'} target="_blank" rel="noopener" class="text-neon-green text-xs hover:underline">
+                  {p.trialDays ? `试用 ${p.trialDays} 天` : '订阅'} →
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="container-x py-12 sm:py-16">
+    <SectionHeader
+      eyebrow="常见问题"
+      title="提前说清楚。"
+    />
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      {faqs.map((f) => (
+        <details class="card p-5 group">
+          <summary class="cursor-pointer list-none flex items-center justify-between gap-3 text-white">
+            <span class="font-medium">{f.q}</span>
+            <span class="text-slate-500 group-open:rotate-45 transition">+</span>
+          </summary>
+          <p class="mt-3 text-sm text-slate-300/90 leading-relaxed">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <FloatingContactCTA />
+</Base>

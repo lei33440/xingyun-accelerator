@@ -1,0 +1,104 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pricing_plans",
+  "info": {
+    "singularName": "pricing-plan",
+    "pluralName": "pricing-plans",
+    "displayName": "Pricing Plan",
+    "description": "Subscription plans for the accelerator (monthly/yearly, device-based)."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 80
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "targetPersona": {
+      "type": "enumeration",
+      "enum": ["Personal", "Business", "Developer", "All"],
+      "default": "All"
+    },
+    "billingPeriod": {
+      "type": "enumeration",
+      "enum": ["Monthly", "Quarterly", "Yearly", "Lifetime"],
+      "default": "Monthly"
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "originalPrice": {
+      "type": "decimal",
+      "min": 0
+    },
+    "currency": {
+      "type": "string",
+      "default": "CNY",
+      "maxLength": 8
+    },
+    "deviceLimit": {
+      "type": "integer",
+      "default": 3,
+      "min": 1
+    },
+    "trafficAllowance": {
+      "type": "string",
+      "maxLength": 80,
+      "default": "无限流量"
+    },
+    "concurrentSessions": {
+      "type": "string",
+      "maxLength": 80,
+      "default": "不限制"
+    },
+    "nodeCountries": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "protocols": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "streamingUnlocked": {
+      "type": "json"
+    },
+    "features": {
+      "type": "json"
+    },
+    "highlight": {
+      "type": "boolean",
+      "default": false
+    },
+    "badge": {
+      "type": "string",
+      "maxLength": 32
+    },
+    "trialDays": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "max": 30
+    },
+    "ctaLabel": {
+      "type": "string",
+      "default": "立即订阅",
+      "maxLength": 40
+    },
+    "ctaLink": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

@@ -1,0 +1,152 @@
+---
+const tabs = [
+  {
+    id: 'personal',
+    label: '个人用户',
+    icon: '👤',
+    headline: '追剧、刷视频、查资料',
+    desc: '90+ 节点秒切，多区流媒体自由切换',
+    points: [
+      '秒切 90+ 国家节点',
+      'Netflix / Disney+ 多区内容',
+      '4K 视频不卡，会议不掉线',
+      '支持手机、电脑、路由器',
+    ],
+    cta: '查看个人套餐',
+    ctaHref: '/pricing#personal',
+  },
+  {
+    id: 'business',
+    label: '跨境团队',
+    icon: '🏢',
+    headline: '出海企业稳定通道',
+    desc: 'IPLC 专线 + 团队子账号，企业 SLA',
+    points: [
+      'IPLC 专线，SLA 99.9%',
+      '团队子账号 + 集中管理',
+      '可申请独享节点 / 定制地区',
+      '合规协议 + 发票支持',
+    ],
+    cta: '咨询团队方案',
+    ctaHref: '/pricing#business',
+  },
+  {
+    id: 'developer',
+    label: '开发者',
+    icon: '⌥',
+    headline: '访问 GitHub / AI 工具',
+    desc: '订阅链接一键导入主流客户端',
+    points: [
+      '稳定访问 GitHub / HuggingFace',
+      'OpenAI / Claude API 顺畅',
+      '一键导入 Clash / Shadowrocket',
+      '命令行工具支持 Linux',
+    ],
+    cta: '查看订阅教程',
+    ctaHref: '/blog',
+  },
+];
+---
+<div class="card overflow-hidden">
+  <!-- Tab bar -->
+  <div class="flex flex-wrap gap-1 p-2 border-b border-white/5 bg-ink-900/40" role="tablist">
+    {tabs.map((t, i) => (
+      <button
+        type="button"
+        role="tab"
+        data-tab={t.id}
+        class:list={[
+          'persona-tab flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition',
+          i === 0
+            ? 'bg-neon-green/15 text-neon-green border border-neon-green/40'
+            : 'border border-transparent text-slate-300 hover:bg-white/5',
+        ]}
+      >
+        <span class="text-base">{t.icon}</span>
+        <span>{t.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <!-- Tab panels -->
+  {tabs.map((t, i) => (
+    <div
+      data-panel={t.id}
+      class:list={['persona-panel grid gap-6 p-5 sm:p-6 sm:grid-cols-[1fr_auto]', i !== 0 && 'hidden']}
+    >
+      <!-- Left: copy + points -->
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex size-9 items-center justify-center rounded-lg bg-neon-green/10 text-xl">
+            {t.icon}
+          </span>
+          <div>
+            <p class="text-lg sm:text-xl font-semibold text-white leading-tight">{t.headline}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{t.desc}</p>
+          </div>
+        </div>
+        <ul class="mt-4 space-y-2.5">
+          {t.points.map((p) => (
+            <li class="flex items-start gap-2.5 text-sm text-slate-200">
+              <svg viewBox="0 0 24 24" class="mt-0.5 size-4 shrink-0 text-neon-green" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12l4 4 10-10" />
+              </svg>
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Right: visual + CTA -->
+      <div class="hidden sm:flex flex-col items-end justify-between gap-3 min-w-[180px]">
+        <div class="text-right">
+          <p class="text-[10px] uppercase tracking-wider text-slate-500">起步价</p>
+          <p class="mt-1 font-mono text-2xl text-white">
+            {t.id === 'personal' && '¥29'}
+            {t.id === 'business' && '¥199'}
+            {t.id === 'developer' && '免费'}
+            <span class="text-sm text-slate-400">/月起</span>
+          </p>
+          {t.id === 'developer' && (
+            <p class="text-[10px] text-neon-green">订阅链接</p>
+          )}
+        </div>
+        <a class="btn-primary !py-1.5 !text-xs" href={t.ctaHref}>
+          {t.cta} →
+        </a>
+      </div>
+    </div>
+  ))}
+
+  <!-- Mobile CTA (always visible at bottom) -->
+  <div class="sm:hidden p-4 border-t border-white/5 bg-ink-900/40">
+    <a class="btn-primary w-full !text-xs" href="/pricing">
+      查看所有套餐 →
+    </a>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const tabs = document.querySelectorAll('.persona-tab');
+    const panels = document.querySelectorAll('.persona-panel');
+    tabs.forEach((t) => {
+      t.addEventListener('click', () => {
+        const id = t.getAttribute('data-tab');
+        tabs.forEach((x) => {
+          x.classList.remove(
+            'bg-neon-green/15', 'text-neon-green', 'border-neon-green/40',
+          );
+          x.classList.add('border-transparent', 'text-slate-300');
+        });
+        t.classList.add(
+          'bg-neon-green/15', 'text-neon-green', 'border-neon-green/40',
+        );
+        t.classList.remove('border-transparent', 'text-slate-300');
+        panels.forEach((p) => {
+          p.classList.toggle('hidden', p.getAttribute('data-panel') !== id);
+        });
+      });
+    });
+  })();
+</script>

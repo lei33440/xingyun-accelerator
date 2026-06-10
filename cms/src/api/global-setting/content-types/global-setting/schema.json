@@ -1,0 +1,93 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_settings",
+  "info": {
+    "singularName": "global-setting",
+    "pluralName": "global-settings",
+    "displayName": "Global Settings",
+    "description": "Singleton config used by every page (brand, contact, trial, module flags)."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "siteName": {
+      "type": "string",
+      "default": "星云加速"
+    },
+    "siteTagline": {
+      "type": "string"
+    },
+    "heroEyebrow": {
+      "type": "string"
+    },
+    "heroHeadline": {
+      "type": "string"
+    },
+    "heroLede": {
+      "type": "text"
+    },
+    "supportEmail": {
+      "type": "string"
+    },
+    "telegramLink": {
+      "type": "string"
+    },
+    "discordInvite": {
+      "type": "string"
+    },
+    "whatsappNumber": {
+      "type": "string"
+    },
+    "wechatId": {
+      "type": "string"
+    },
+    "wechatQrImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "noticeBanner": {
+      "type": "string"
+    },
+    "noticeEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "showPricingModule": {
+      "type": "boolean",
+      "default": true
+    },
+    "showBlogModule": {
+      "type": "boolean",
+      "default": true
+    },
+    "showClientDownload": {
+      "type": "boolean",
+      "default": true
+    },
+    "showStreamingList": {
+      "type": "boolean",
+      "default": true
+    },
+    "showSpeedTest": {
+      "type": "boolean",
+      "default": true
+    },
+    "defaultTrialDays": {
+      "type": "integer",
+      "default": 1,
+      "min": 0,
+      "max": 30
+    },
+    "defaultSeoTitle": {
+      "type": "string"
+    },
+    "defaultSeoDescription": {
+      "type": "text"
+    },
+    "footerCopy": {
+      "type": "string"
+    }
+  }
+}

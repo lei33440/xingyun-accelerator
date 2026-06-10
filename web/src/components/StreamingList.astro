@@ -1,0 +1,39 @@
+---
+const services = [
+  { name: 'YouTube', flag: '▶️', desc: '4K HDR 流畅' },
+  { name: 'Netflix', flag: 'N', desc: '多区内容切换' },
+  { name: 'Disney+', flag: 'D+', desc: '全区域解锁' },
+  { name: 'HBO Max', flag: 'H', desc: '4K 无广告' },
+  { name: 'Spotify', flag: '♫', desc: '无损音质' },
+  { name: 'ChatGPT', flag: '✦', desc: '稳定使用' },
+  { name: 'Claude', flag: '◇', desc: '稳定使用' },
+  { name: 'GitHub', flag: '⌥', desc: 'git push 顺畅' },
+  { name: 'Telegram', flag: '✈', desc: '消息秒达' },
+  { name: 'Google', flag: 'G', desc: '搜索 / 邮箱 / Drive' },
+  { name: 'X / Twitter', flag: '𝕏', desc: '图片视频秒开' },
+  { name: 'Instagram', flag: '◎', desc: 'Reels 流畅' },
+];
+---
+<div class="card p-5 sm:p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-neon-violet/90">流媒体解锁</p>
+      <h3 class="mt-1 text-lg font-semibold text-white">主流服务全面兼容</h3>
+    </div>
+    <span class="chip !text-[10px]">12+ 平台</span>
+  </div>
+
+  <ul class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+    {services.map((s) => (
+      <li class="flex items-center gap-2.5 rounded-lg border border-white/5 bg-ink-900/50 px-3 py-2">
+        <span class="inline-flex size-7 items-center justify-center rounded-md bg-white/5 text-sm font-semibold text-neon-green shrink-0">
+          {s.flag}
+        </span>
+        <div class="min-w-0">
+          <p class="text-sm text-white truncate">{s.name}</p>
+          <p class="text-[10px] text-slate-500 truncate">{s.desc}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>

@@ -1,0 +1,59 @@
+---
+import Base from '@layouts/Base.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import ClientDownloadSection from '@components/ClientDownloadSection.astro';
+import FloatingContactCTA from '@components/FloatingContactCTA.astro';
+import { getAllClientDownloads, getGlobalSettings } from '@lib/cms';
+
+const [settings, downloads] = await Promise.all([getGlobalSettings(), getAllClientDownloads()]);
+const trialDays = settings.defaultTrialDays || 3;
+---
+<Base settings={settings} title="下载客户端" description="全平台客户端下载：Windows / macOS / iOS / Android / Linux。">
+  <section class="container-x pt-14 pb-8">
+    <SectionHeader
+      eyebrow="下载"
+      title="挑你的平台，下载、安装、连接。"
+      lede={`所有客户端均经过签名校验。订阅后${trialDays}天免费试用，无需信用卡。`}
+    />
+  </section>
+
+  <section class="container-x pb-12">
+    <ClientDownloadSection />
+  </section>
+
+  <section class="container-x pb-12 sm:pb-16">
+    <div class="card p-6 sm:p-8">
+      <h3 class="text-lg font-semibold text-white">安装步骤</h3>
+      <ol class="mt-4 grid gap-4 sm:grid-cols-3">
+        <li>
+          <span class="inline-flex size-8 items-center justify-center rounded-lg bg-neon-green/15 text-neon-green font-semibold">1</span>
+          <p class="mt-2 text-sm text-white font-medium">下载并安装</p>
+          <p class="mt-1 text-xs text-slate-400">选择对应平台下载客户端，按提示完成安装。</p>
+        </li>
+        <li>
+          <span class="inline-flex size-8 items-center justify-center rounded-lg bg-neon-green/15 text-neon-green font-semibold">2</span>
+          <p class="mt-2 text-sm text-white font-medium">登录账号</p>
+          <p class="mt-1 text-xs text-slate-400">订阅后您将收到订阅链接，粘贴到客户端即可导入。</p>
+        </li>
+        <li>
+          <span class="inline-flex size-8 items-center justify-center rounded-lg bg-neon-green/15 text-neon-green font-semibold">3</span>
+          <p class="mt-2 text-sm text-white font-medium">一键连接</p>
+          <p class="mt-1 text-xs text-slate-400">点主界面大圆点，系统自动选择最低延迟节点。</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="container-x pb-12 sm:pb-16">
+    <div class="card p-6 sm:p-8 text-center">
+      <h3 class="text-lg font-semibold text-white">还没订阅？</h3>
+      <p class="mt-2 text-sm text-slate-400">领取 {trialDays} 天免费试用，零门槛体验全部节点。</p>
+      <div class="mt-5 flex flex-wrap justify-center gap-3">
+        <a class="btn-primary" href="/pricing">查看价格</a>
+        <a class="btn-ghost" href={settings.telegramLink || '#'} target="_blank" rel="noopener">Telegram 咨询</a>
+      </div>
+    </div>
+  </section>
+
+  <FloatingContactCTA />
+</Base>

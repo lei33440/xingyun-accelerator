@@ -1,0 +1,9 @@
+---
+const mode = (import.meta.env.CMS_READ_TOKEN ? 'strapi' : 'mock');
+---
+{mode === 'mock' && (
+  <div class="fixed bottom-3 left-3 z-50 max-w-xs rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-200 backdrop-blur">
+    <strong class="font-semibold">开发模式 · 本地模拟数据</strong>
+    <p class="mt-0.5 text-amber-300/80">未配置 Strapi 令牌，正在使用本地示例数据。在 <code>web/.env</code> 设置 <code>CMS_READ_TOKEN</code> 即可切换到真实 CMS。</p>
+  </div>
+)}

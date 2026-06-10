@@ -1,0 +1,56 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+web/dist/
+web/.astro/
+cms/.strapi/
+cms/build/
+cms/dist/
+cms/public/uploads/
+cms/.tmp/
+cms/.cache/
+
+# environment
+.env
+.env.local
+.env.*.local
+cms/.env
+web/.env
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+*.swp
+
+# data
+cms/data.db
+cms/data.db-journal
+cms/.sqlite
+*.sqlite
+.data/
+
+# backups
+/var/backups/
+
+# pm2
+ecosystem.config.cjs
+
+# dev local
+.astro-dev.log
+.strapi.log
+
+# Strapi runtime generated
+cms/.strapi-updater.json
