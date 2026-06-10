@@ -22,6 +22,15 @@ One-shot deployment for the proxy-ip accelerator site on a fresh Ubuntu 22.04 / 
 
 ## One-time setup
 
+### 0. Pick a flavor
+
+| Script | Best for |
+|---|---|
+| `install.sh` | 极简 / 海外 VPS / 你习惯命令行 |
+| `install-bt.sh` | 国内 VPS / 你喜欢宝塔面板的 UI |
+
+下面是 `install.sh`（纯净版）的步骤；如果用宝塔，跳到 [bt/README.md](bt/README.md)。
+
 ### 1. Buy / prepare a VPS
 
 Recommended minimum: **2 vCPU / 2 GB RAM / 40 GB SSD** (Vultr / DigitalOcean / BandwagonHost / 阿里云 / 腾讯云 ≈ $5–$10/month).
@@ -158,10 +167,15 @@ sudo -u postgres psql -c "CREATE USER strapi WITH PASSWORD '...';"
 
 | File | Purpose |
 |---|---|
-| `install.sh` | One-shot first-time setup |
-| `update.sh` | Pull + rebuild + restart (idempotent) |
+| `install.sh` | One-shot first-time setup (pure CLI, no Baota) |
+| `update.sh` | Pull + rebuild + restart (idempotent, pure CLI) |
+| `install-bt.sh` | One-shot setup on a server with **Baota (宝塔)** already installed |
+| `update-bt.sh` | Pull + rebuild + restart (Baota flavor) |
 | `revalidate.sh` | Fire the host deploy hook |
 | `backup.sh` | Snapshot DB + dist |
 | `rollback.sh` | Restore from a backup |
-| `nginx/web.conf` | Public site vhost template |
-| `nginx/cms.conf` | Strapi vhost template (127.0.0.1 only) |
+| `nginx/web.conf` | Public site vhost template (pure nginx) |
+| `nginx/cms.conf` | Strapi vhost template (127.0.0.1 only, pure nginx) |
+| `bt/README.md` | Baota-panel-based deployment guide (Chinese) |
+| `bt/web.conf.snippet` | Paste into Baota's "前台" site config |
+| `bt/cms.conf.snippet` | Paste into Baota's "CMS" site config |

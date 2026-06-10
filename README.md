@@ -32,7 +32,7 @@
 - 后台使用 Strapi v4，开箱即用的可视化编辑界面 + REST API
 - 前后端完全解耦，后台只通过 read-only API token 暴露数据，攻击面最小
 - 内容变更支持 webhook 触发前台自动重新部署
-- 单 VPS 一键部署脚本（`deploy/install.sh`）
+- 单 VPS 一键部署脚本（`deploy/install.sh` 或 `deploy/install-bt.sh`）
 
 ---
 
@@ -134,12 +134,15 @@ npm run cms:seed
 │   └── package.json
 │
 ├── deploy/               # 服务器一键部署脚本（生产用）
-│   ├── install.sh        # 一键装好整个栈
-│   ├── update.sh         # 拉代码 + 重新编译 + 重启
+│   ├── install.sh        # 纯净版一键装（CLI 模式）
+│   ├── install-bt.sh     # 宝塔面板版一键装
+│   ├── update.sh         # 纯净版更新
+│   ├── update-bt.sh      # 宝塔版更新
 │   ├── revalidate.sh     # 触发 CDN 重新部署
 │   ├── backup.sh         # 每天备份 DB + 静态站点
 │   ├── rollback.sh       # 一键回滚
-│   ├── nginx/            # vhost 模板
+│   ├── nginx/            # 纯净版 nginx vhost 模板
+│   ├── bt/               # 宝塔版配置片段 + 中文部署文档
 │   └── README.md         # 详细部署文档
 │
 ├── scripts/              # 通用工具脚本
@@ -261,6 +264,34 @@ sudo bash deploy/install.sh
 - 申请 Let's Encrypt SSL 证书
 
 详细步骤（Cloudflare DNS 配置、Strapi 首次注册、API token 创建）见 [`deploy/README.md`](deploy/README.md)。
+
+### 7.2 宝塔面板（一键脚本，**国内 VPS 推荐**）
+
+如果你习惯宝塔的 UI 界面管理网站 / SSL / 进程：
+
+1. 先装宝塔：<https://www.bt.cn>（CentOS / Ubuntu 都有一键脚本）
+2. 宝塔里装 **Nginx** + **PM2 管理器**（PM2 里切换 Node 20）
+3. 创两个占位站点（`example.com` 和 `cms-9f3a2b.example.com`）
+4. SSH 跑：
+
+   ```bash
+   cd /www/wwwroot
+   git clone <仓库地址> proxy-ip
+   cd proxy-ip
+   sudo bash deploy/install-bt.sh
+   ```
+
+5. 在宝塔 UI 把 `web.conf.snippet` / `cms.conf.snippet` 粘到对应站点的配置里 → 申请 SSL → 完事
+
+完整步骤 + 截图位置说明见 [`deploy/bt/README.md`](deploy/bt/README.md)。
+
+| | install.sh（纯净）| install-bt.sh（宝塔）|
+|---|---|---|
+| 进程管理 | 自带 pm2 | 宝塔 PM2 管理器 |
+| Nginx 配置 | 命令行写 | 宝塔 UI 改 |
+| SSL | certbot 自动 | 宝塔 UI 一键 |
+| 防火墙 | ufw 脚本 | 宝塔防火墙 UI |
+| 适合 | 海外 / CI/CD / 极客 | 国内 / 喜欢 UI |
 
 ### 7.2 Cloudflare Pages（最省心）
 
